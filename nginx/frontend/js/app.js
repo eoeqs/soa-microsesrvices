@@ -1,5 +1,5 @@
 const API_CONFIG = {
-    ORGANIZATION_SERVICE: '/organization',
+    ORGANIZATION_SERVICE: '/organizations',
     ORGDIRECTORY_SERVICE: '/orgdirectory'
 };
 
@@ -430,7 +430,7 @@ async function loadOrganizations(page = 0) {
     try {
         showLoading('organizationsTable');
 
-        const response = await fetch(`${API_CONFIG.ORGDIRECTORY_SERVICE}/orgdirectory/order`, {
+        const response = await fetch(`${API_CONFIG.ORGDIRECTORY_SERVICE}/order`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
