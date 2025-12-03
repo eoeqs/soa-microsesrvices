@@ -9,7 +9,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 @Path("/organizations")
@@ -39,9 +38,7 @@ public class OrganizationResource {
     @Path("/search")
     public Response searchOrganizations(@Valid FilterRequestDTO filterRequest) {
         try {
-            PaginatedResponseDTO response = new PaginatedResponseDTO(
-                    List.of(), 0, 0L, 0, 20
-            );
+            PaginatedResponseDTO response = organizationService.searchOrganizationsWithSorting(filterRequest);
             return Response.ok(response).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -148,4 +145,17 @@ public class OrganizationResource {
                     .build();
         }
     }
+//
+//    @POST
+//    @Path("/count-by-address-exact")
+//    public Response countOrganizationsByAddressExact(@Valid AddressRequestDTO addressRequest) {
+//        try {
+//            Long count = organizationService.countOrganizationsByAddress(addressRequest.street());
+//            return Response.ok(Map.of("count", count)).build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+//                    .entity(Map.of("error", e.getMessage()))
+//                    .build();
+//        }
+//    }
 }

@@ -100,6 +100,10 @@ public class OrganizationServiceImpl implements OrganizationServiceRemote {
         return organizationRepository.countByPostalAddressStreetLessThan(street);
     }
 
+    public Long countOrganizationsByAddress(String street) {
+        return organizationRepository.countByPostalAddressStreet(street);
+    }
+
     @Override
     public boolean existsByFullName(String fullName) {
         return organizationRepository.existsByFullName(fullName);
@@ -108,26 +112,22 @@ public class OrganizationServiceImpl implements OrganizationServiceRemote {
     @Override
     public PaginatedResponseDTO searchOrganizationsWithSorting(FilterRequestDTO filterRequest) {
         try {
-            // Базовая реализация - возвращаем все организации с пагинацией
-            List<Organization> allOrganizations = organizationRepository.findAll();
+            List<Organization> organizations = organizationRepository.searchWithFilter(filterRequest);
 
-            // Применяем простую пагинацию
-            int page = filterRequest.page() != null ? filterRequest.page() : 0;
-            int size = filterRequest.size() != null ? filterRequest.size() : 20;
+            Long totalCount = organizationRepository.countWithFilter(filterRequest);
 
-            int start = page * size;
-            int end = Math.min(start + size, allOrganizations.size());
-
-            List<Organization> pagedOrganizations = allOrganizations.subList(start, end);
-
-            List<OrganizationResponseDTO> organizationDTOs = pagedOrganizations.stream()
+            List<OrganizationResponseDTO> organizationDTOs = organizations.stream()
                     .map(mapper::toResponseDTO)
                     .collect(Collectors.toList());
 
+            Integer page = filterRequest.page() != null ? filterRequest.page() : 0;
+            Integer size = filterRequest.size() != null ? filterRequest.size() : 20;
+            int totalPages = (int) Math.ceil((double) totalCount / size);
+
             return new PaginatedResponseDTO(
                     organizationDTOs,
-                    (int) Math.ceil((double) allOrganizations.size() / size),
-                    (long) allOrganizations.size(),
+                    totalPages,
+                    totalCount,
                     page,
                     organizationDTOs.size()
             );

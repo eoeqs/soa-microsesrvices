@@ -23,7 +23,7 @@ spring:
           predicates:
             - Path=/organizations/**
           filters:
-            - RewritePath=/organizations(?<segment>/?.*), /web-module/api/organizations${segment}
+            - RewritePath=/organizations/(?<segment>.*), /organizations/api/\$\{segment}
     loadbalancer:
       enabled: true
 
@@ -43,10 +43,10 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
-
-ribbon:
-  eureka:
-    enabled: true
+#
+#ribbon:
+#  eureka:
+#    enabled: true
 
 logging:
   level:
