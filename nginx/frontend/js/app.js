@@ -92,6 +92,32 @@ function setupInputValidation() {
     });
 }
 
+async function handleResponse(response) {
+    const contentType = response.headers.get('content-type');
+
+    if (!response.ok) {
+        let errorMessage;
+        try {
+            if (contentType && contentType.includes('application/json')) {
+                const errorData = await response.json();
+                errorMessage = errorData.message || JSON.stringify(errorData);
+            } else {
+                errorMessage = await response.text();
+            }
+        } catch (e) {
+            errorMessage = `HTTP error! status: ${response.status}`;
+        }
+        throw new Error(errorMessage);
+    }
+
+    if (contentType && contentType.includes('application/json')) {
+        return await response.json();
+    } else {
+        return await response.text();
+    }
+}
+
+
 function validateFilterInput() {
     const field = document.getElementById('filterField').value;
     const operator = document.getElementById('filterOperator').value;
@@ -443,12 +469,13 @@ async function loadOrganizations(page = 0) {
             })
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-        }
+//        if (!response.ok) {
+//            const errorText = await response.text();
+//            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+//        }
 
-        const data = await response.json();
+//        const data = await response.json();
+        const data = await handleResponse(response);
         currentOrganizations = data.organizations;
         currentPage = data.page;
         totalPages = data.totalPages;

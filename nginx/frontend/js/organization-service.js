@@ -34,12 +34,13 @@ async function createOrganization() {
             body: JSON.stringify(organizationData)
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create organization');
-        }
+//        if (!response.ok) {
+//            const errorData = await response.json();
+//            throw new Error(errorData.message || 'Failed to create organization');
+//        }
 
-        const result = await response.json();
+//        const result = await response.json();
+        const result = await handleResponse(response);
         showAlert('Organization created successfully!', 'success');
         document.getElementById('createModal').querySelector('.btn-close').click();
         loadOrganizations();
@@ -52,11 +53,12 @@ async function createOrganization() {
 async function editOrganization(id) {
     try {
         const response = await fetch(`${API_CONFIG.ORGANIZATION_SERVICE}/${id}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch organization');
-        }
+//        if (!response.ok) {
+//            throw new Error('Failed to fetch organization');
+//        }
 
-        const organization = await response.json();
+//        const organization = await response.json();
+        const organization = await handleResponse(response);
         currentEditingId = id;
 
         populateEditForm(organization);
@@ -112,12 +114,13 @@ async function updateOrganization() {
             body: JSON.stringify(organizationData)
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to update organization');
-        }
+//        if (!response.ok) {
+//            const errorData = await response.json();
+//            throw new Error(errorData.message || 'Failed to update organization');
+//        }
 
-        const result = await response.json();
+//        const result = await response.json();
+        const result = await handleResponse(response);
         showAlert('Organization updated successfully!', 'success');
         document.getElementById('editModal').querySelector('.btn-close').click();
         loadOrganizations();
@@ -256,11 +259,12 @@ async function groupByFullName() {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+//        if (!response.ok) {
+//            throw new Error(`HTTP error! status: ${response.status}`);
+//        }
 
-        const data = await response.json();
+//        const data = await response.json();
+        const data = await handleResponse(response);
         displaySimpleGroupByResults(data);
 
     } catch (error) {
@@ -332,7 +336,9 @@ async function countByAddress() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const count = await response.json();
+        const result = await response.json();
+
+        const count = result.count;
 
         const container = document.getElementById('orgdirectoryResults');
         container.innerHTML = `
@@ -349,7 +355,6 @@ async function countByAddress() {
         console.error('Error:', error);
     }
 }
-
 function showCountByAddressModal() {
     const errorContainer = document.getElementById('countByAddressError');
     if (errorContainer) {
