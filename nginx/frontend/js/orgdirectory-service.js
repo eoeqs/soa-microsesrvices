@@ -58,7 +58,8 @@ async function filterByTurnover() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+//        const data = await response.json();
+        const data = await handleResponse(response);
         displayTurnoverResults(data.organizations, min, max);
 
     } catch (error) {
@@ -126,11 +127,12 @@ async function groupByFullNameDirectory() {
             method: 'GET'
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+//        if (!response.ok) {
+//            throw new Error(`HTTP error! status: ${response.status}`);
+//        }
 
-        const data = await response.json();
+//        const data = await response.json();
+        const data = await handleResponse(response);
         displayGroupedResults(data);
 
     } catch (error) {
@@ -163,35 +165,33 @@ function displayGroupedResults(groups) {
     container.innerHTML = html;
 }
 
-async function countByAddressDirectory() {
-    const street = document.getElementById('countAddressStreet').value.trim();
-
-    if (!street) {
-        showAlert('Please enter a street address', 'warning');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_CONFIG.ORGDIRECTORY_SERVICE}/count/address?street=${encodeURIComponent(street)}`, {
-            method: 'GET'
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const count = await response.json();
-
-        const modal = bootstrap.Modal.getInstance(document.getElementById('countByAddressModal'));
-        modal.hide();
-
-        showAlert(`Found ${count} organizations at address: ${street}`, 'success');
-
-    } catch (error) {
-        showAlert(`Error counting organizations: ${error.message}`, 'danger');
-        console.error('Error:', error);
-    }
-}
+//async function countByAddressDirectory() {
+//    const street = document.getElementById('countAddressStreet').value.trim();
+//
+//    if (!street) {
+//        showAlert('Please enter a street address', 'warning');
+//        return;
+//    }
+//
+//    try {
+//        const response = await fetch(`${API_CONFIG.ORGDIRECTORY_SERVICE}/count/address?street=${encodeURIComponent(street)}`, {
+//            method: 'GET'
+//        });
+//
+//        const result = await handleResponse(response);
+//
+//        const count = result && result.count !== undefined ? result.count : 0;
+//
+//        const modal = bootstrap.Modal.getInstance(document.getElementById('countByAddressModal'));
+//        modal.hide();
+//
+//        showAlert(`Found ${count} organizations at address: ${street}`, 'success');
+//
+//    } catch (error) {
+//        showAlert(`Error counting organizations: ${error.message}`, 'danger');
+//        console.error('Error:', error);
+//    }
+//}
 
 async function deleteByAddressDirectory() {
     const street = document.getElementById('deleteAddressStreet').value.trim();
