@@ -34,6 +34,7 @@ spring:
         enabled: true
         register: false
         register-health-check: false
+        service-name: organization-service
 
 eureka:
   client:
@@ -49,4 +50,5 @@ logging:
     org.springframework.cloud.gateway: DEBUG
     org.springframework.cloud: DEBUG
     org.springframework.cloud.loadbalancer: DEBUG
-    org.springframework.cloud.consul: DEBUG
+    org.springframework.cloud.loadbalancer.core.RoundRobinLoadBalancer: DEBUG
+    org.springframework.cloud.loadbalancer.cache: DEBUG
