@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $projectDirs = @(
-    "config-service",
+    "config-service1"
     "eureka-service",
     "first-module",
     "gateway-service",
@@ -26,20 +26,18 @@ foreach ($dir in $projectDirs) {
 
 docker compose down
 docker compose build
+Start-Sleep -Seconds 5
+
 docker compose up -d config-service
 Start-Sleep -Seconds 5
 
-try {
-    Invoke-RestMethod -Uri "http://localhost:8888/actuator/health"
-} catch {
-    exit 1
-}
 docker compose up -d eureka-service
 Start-Sleep -Seconds 5
 
 try {
-    Invoke-RestMethod -Uri "http://localhost:8761/actuator/health"
+    Invoke-WebRequest -UseBasicParsing -Uri "http://localhost:8761"
 } catch {
+    docker compose logs --tail=200 eureka-service
     exit 1
 }
 
